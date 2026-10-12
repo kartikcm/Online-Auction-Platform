@@ -1,0 +1,160 @@
+{% extends "auctions/admin/admin_layout.html" %}
+{% load static %}
+{% block body %}
+
+<!-- Main Content Area -->
+<div class="flex-1 flex flex-col">
+    <header class="bg-white border-b-2 border-gray-200 py-4">
+        <h1 class="text-lg text-center font-semibold">Online Auction Administration</h1>
+    </header>
+
+    <!-- Search Listings Form -->
+    <div class="my-4 flex items-center justify-center">
+        <form method="GET" action="{% url 'manage_listings' %}" 
+              class="mr-4 border-2 border-yellow-500 rounded-xl p-3 w-[70vh] flex justify-between 
+                     bg-gradient-to-r from-yellow-50 via-white to-yellow-100 shadow-md 
+                     transition-all duration-500 hover:shadow-yellow-400 hover:scale-[1.01]">
+
+            <input type="text" name="q" placeholder="🔍 Search listings, bids, or sellers..."
+                   class="rounded-md text-center w-[60vh] px-4 py-2 text-sm text-gray-800 placeholder-gray-500
+                          border border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-300
+                          transition-all duration-500 ease-in-out animate-[pulse_2s_infinite] hover:scale-105">
+
+            <button type="submit" 
+                    class="bg-gradient-to-r from-yellow-500 to-orange-500 text-white py-2 px-4 rounded-md 
+                           font-semibold shadow-sm hover:shadow-md hover:scale-105 transition-all duration-300 text-sm">
+                💰 Search
+            </button>
+        </form>
+    </div>
+
+    <!-- Manage Listings Section -->
+    <div class="bg-white border-2 border-yellow-400 rounded-lg p-4 shadow-xl mx-4 my-4 
+                animate-[fadeSlide_0.8s_ease-out]">
+
+        <h2 class="text-lg font-semibold mb-4 text-center text-gray-800 
+                   animate-[popIn_0.6s_ease-out]">
+            🏷️ Manage Listings 📦
+        </h2>
+
+        <ul class="grid grid-cols-2 gap-4" id="listing-container">
+            {% for listing in listings %}
+                {% if forloop.counter <= 4 %}
+                <li class="listing-item">
+                {% else %}
+                <li class="listing-item hidden extra-listing">
+                {% endif %}
+                    <div class="flex items-start bg-gradient-to-br from-yellow-50 to-white border border-yellow-300 
+                                rounded-xl p-4 shadow-lg min-h-[40vh] mx-2 hover:shadow-yellow-400 
+                                transform transition-transform duration-300 hover:scale-[1.03] 
+                                animate-[fadeUp_0.6s_ease-out]">
+
+                        <div class="ml-4 space-y-1">
+                            <!-- 📌 Clickable Title -->
+                            <div onclick="toggleDescription('{{ listing.id }}')" 
+                                 class="text-sm font-semibold text-gray-900 cursor-pointer hover:text-blue-600 transition">
+                                📌 {{ listing.title }}
+                            </div>
+
+                            <!-- 📝 Hidden Description -->
+                            <div id="desc-{{ listing.id }}" 
+                                 class="text-sm text-gray-600 mt-1 hidden transition-all duration-300 ease-in-out">
+                                📝 {{ listing.description }}
+                            </div>
+
+                            <div class="text-sm text-gray-600">💰 Starting Value: ₹{{ listing.starting_value }}</div>
+                            <div class="text-sm text-gray-600">📂 Category: {{ listing.category }}</div>
+                            <div class="text-sm text-gray-600">
+                                <strong>Auction Active: 
+                                    {% if listing.auction_active %}
+                                        <span class="text-green-500">✅ Yes</span>
+                                    {% else %}
+                                        <span class="text-red-500">❌ No</span>
+                                    {% endif %}
+                                </strong>
+                            </div>
+
+                           <div class="flex mt-3 space-x-2">
+    <!-- 🗑️ Delete Button -->
+    <form action="{% url 'delete_listing' listing.id %}" method="post">
+        {% csrf_token %}
+        <button type="submit" 
+                class="bg-red-500 text-white py-1 px-3 rounded-md 
+                       hover:bg-red-600 transition duration-300">
+            🗑️ Delete
+        </button>
+    </form>
+
+    <!-- 🔄 Reactivate Button -->
+    {% if not listing.auction_active %}
+    <form action="{% url 'activate_listing' listing.id %}" method="post">
+        {% csrf_token %}
+        <button type="submit" 
+                class="bg-green-500 text-white py-1 px-3 rounded-md 
+                       hover:bg-green-600 transition duration-300">
+            🔄 Reactivate
+        </button>
+    </form>
+    {% else %}
+    <!-- ⛔ Deactivate Button -->
+    <form action="{% url 'deactivate_listing' listing.id %}" method="post">
+        {% csrf_token %}
+        <button type="submit" 
+                class="bg-yellow-500 text-white py-1 px-3 rounded-md 
+                       hover:bg-yellow-600 transition duration-300">
+            ⛔ Deactivate
+        </button>
+    </form>
+    {% endif %}
+</div>
+
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+
+        <!-- 👀 View More Button -->
+        {% if listings|length > 4 %}
+        <div class="text-center mt-4">
+            <button onclick="toggleListings()" 
+                    class="bg-blue-500 text-white px-4 py-2 rounded-md 
+                           hover:bg-blue-600 transition duration-300 text-sm">
+                👀 View More
+            </button>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- 🎬 Custom Animations -->
+    <style>
+    @keyframes fadeSlide {
+      0% { opacity: 0; transform: translateY(-20px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes popIn {
+      0% { transform: scale(0.9); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    @keyframes fadeUp {
+      0% { opacity: 0; transform: translateY(20px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    </style>
+
+    <!-- 🧠 Toggle Scripts -->
+    <script>
+      function toggleDescription(id) {
+        const desc = document.getElementById(`desc-${id}`);
+        desc.classList.toggle("hidden");
+      }
+
+      function toggleListings() {
+        const hiddenListings = document.querySelectorAll('.extra-listing');
+        hiddenListings.forEach(item => item.classList.toggle('hidden'));
+      }
+    </script>
+
+</div>
+{% endblock %}

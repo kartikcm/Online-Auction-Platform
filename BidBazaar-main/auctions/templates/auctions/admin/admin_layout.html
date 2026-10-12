@@ -1,0 +1,82 @@
+{% load static %}
+{% load time_filters %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+
+    <!-- External Libraries -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Optional Custom Styling -->
+    <link rel="stylesheet" href="{% static 'css/admin.css' %}">
+</head>
+
+<body class="bg-gray-100 font-sans leading-normal tracking-normal min-h-screen">
+
+    <div class="flex flex-col sm:flex-row bg-gray-200">
+
+        <!-- Mobile Sidebar Toggle -->
+        <button id="sidebarToggle" class="sm:hidden bg-gray-800 text-white p-3">
+            ☰ Menu
+        </button>
+
+        <!-- Sidebar -->
+        <aside id="sidebar" class="bg-gray-800 w-64 pt-10 pb-6 hidden sm:block sm:static sm:min-h-screen">
+            <div class="text-white px-8 fixed w-64">
+
+                <!-- Dashboard Title -->
+                <a href="{% url 'admin-dashboard' %}">
+                    <h1 class="text-lg font-semibold mb-6 cursor-pointer">Admin Dashboard</h1>
+                </a>
+
+                <!-- Logo Image -->
+                <div class="flex justify-center items-center bg-gray-200 py-4 mb-4 rounded">
+                    <a href="{% url 'admin-dashboard' %}">
+                        <img src="https://i.pinimg.com/originals/39/bc/6a/39bc6a2adeb9f701e22278bc524852f0.jpg"
+                             alt="Bid Bazaar Logo"
+                             class="w-20 h-20 object-cover rounded-full hover:scale-105 transition-transform duration-300">
+                    </a>
+                </div>
+
+                <!-- Navigation Links -->
+                <ul class="space-y-2">
+                    <li><a href="{% url 'manage_users' %}" class="block py-2 px-4 hover:bg-gray-700">Manage Users</a></li>
+                    <li><a href="{% url 'manage_listings' %}" class="block py-2 px-4 hover:bg-gray-700">Manage Listings</a></li>
+                    <li><a href="{% url 'reports' %}" class="block py-2 px-4 hover:bg-gray-700">Reports</a></li>
+                    <li><a href="{% url 'reports' %}?status=approved" class="block py-2 px-4 hover:bg-gray-700">Approved Listings</a></li>
+                    <li><a href="{% url 'reports' %}?status=rejected" class="block py-2 px-4 hover:bg-gray-700">Rejected Listings</a></li>
+                    <li><a href="{% url 'reports' %}?status=new" class="block py-2 px-4 hover:bg-gray-700">New Listings</a></li>
+                    <li><a href="{% url 'notifications' %}" class="block py-2 px-4 hover:bg-gray-700">Notifications 🔔</a></li>
+                    <li><a href="{% url 'logout' %}" class="block py-2 px-4 text-red-600 hover:bg-gray-200 font-bold border border-transparent hover:border-red-600">Logout</a></li>
+                </ul>
+
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-6">
+            {% block body %}
+            {% endblock %}
+        </main>
+
+    </div>
+
+    <!-- Optional Custom Script -->
+    <script src="{% static 'js/admin.js' %}"></script>
+
+    <!-- Sidebar Toggle Script -->
+    <script>
+        document.getElementById('sidebarToggle').addEventListener('click', function () {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('hidden');
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,77 @@
+{% extends "auctions/layout.html" %}
+{% block body %}
+{% load static %}
+
+<div class="flex flex-col items-center justify-center h-screen bg-gray-900 animate-[fadeSlide_0.8s_ease-out] perspective-[1000px]">
+
+  <!-- 🛍️ Logo -->
+  <div class="mb-6 animate-[popIn_0.6s_ease-out] transform hover:scale-105 transition duration-300">
+    <img src="{% static 'auctions/logo.svg' %}" alt="Store Logo" width="200px" class="drop-shadow-xl" />
+  </div>
+
+  <!-- 🔐 Heading -->
+  <h1 class="text-3xl font-bold mb-2 text-gray-100 animate-[fadeUp_0.6s_ease-out]">OTP Authentication</h1>
+  <p class="text-gray-400 mb-8 animate-[fadeUp_0.8s_ease-out]">Please enter the OTP sent to your registered email address.</p>
+
+  <!-- 🔢 OTP Form -->
+  <form class="flex flex-col items-center space-y-4 animate-[fadeUp_1s_ease-out]" method="POST">
+    {% csrf_token %}
+    <label for="otp" class="block text-gray-400">Enter OTP:</label>
+    <input
+      type="text"
+      name="otp"
+      placeholder="🔢 6-digit code"
+      class="w-64 px-4 py-2 border border-gray-300 rounded-md text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300 transform hover:scale-105 hover:shadow-inner hover:shadow-blue-500/30"
+      required
+    >
+    <button
+      type="submit"
+      class="bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 text-white font-semibold px-6 py-2 rounded-md shadow-lg transition duration-300 transform hover:scale-105 hover:-translate-y-1 hover:rotate-[1deg] hover:shadow-[0_10px_20px_rgba(59,130,246,0.6)]"
+    >
+      ✅ Verify OTP
+    </button>
+
+    {% if error %}
+    <p class="text-red-500 mt-2 animate-[popIn_0.5s_ease-out]">{{ error }}</p>
+    {% endif %}
+  </form>
+
+  <!-- 📬 Message Box -->
+  {% if message %}
+  <div class="flex bg-blue-100 rounded-lg p-4 my-4 text-sm text-blue-700 animate-[popIn_0.5s_ease-out]" role="alert">
+    <svg class="w-5 h-5 inline mr-3" fill="currentColor" viewBox="0 0 20 20">
+      <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+    </svg>
+    <div><span class="font-medium">{{ message }}</span></div>
+  </div>
+  {% endif %}
+
+  <!-- ⏳ Redirect Script -->
+  {% if request.session.otp_verified %}
+  <script>
+    setTimeout(function() {
+      window.location.href = "{% url 'login' %}";
+    }, 5000);
+  </script>
+  {% endif %}
+</div>
+
+<!-- 🎬 Custom Animations -->
+<style>
+@keyframes fadeSlide {
+  0% { opacity: 0; transform: translateY(-20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeUp {
+  0% { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes popIn {
+  0% { transform: scale(0.95); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+</style>
+
+{% endblock %}

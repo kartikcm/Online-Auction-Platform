@@ -1,0 +1,192 @@
+{% extends "auctions/layout.html" %}
+{% block body %}
+{% load static %}
+
+<div class="dark:bg-gray-900 flex justify-center items-center h-screen perspective-[1000px] animate-[fadeSlide_0.8s_ease-out]">
+  <!-- Left: Image -->
+  <div class="relative w-1/2 h-screen hidden lg:block flex justify-center items-center animate-[fadeIn_1s_ease-out]">
+    <p class="absolute inset-0 flex flex-col z-10 text-xl text-center mt-[30vh] text-white animate-[popIn_0.6s_ease-out]">
+      An Auction Platform for <br />
+      <strong>Collectors</strong>
+    </p>
+    <img
+      src="{% static 'auctions/left-bg.png' %}"
+      alt="Placeholder Image"
+      class="absolute object-fill w-full h-full z-0"
+    />
+  </div>
+
+  <!-- Right: Register Form -->
+  <div class="lg:p-36 md:p-52 sm:p-20 p-8 w-full lg:w-1/2 animate-[fadeUp_0.8s_ease-out]">
+    
+    {% if message %}
+    <div class="flex bg-blue-100 rounded-lg p-4 mb-4 text-sm text-blue-700 animate-[popIn_0.5s_ease-out]" role="alert">
+      <svg class="w-5 h-5 inline mr-3" fill="currentColor" viewBox="0 0 20 20">
+        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+      </svg>
+      <div>
+        <span class="font-medium">{{ message }}</span> Change a few things up and try submitting again.
+      </div>
+    </div>
+    {% endif %}
+
+    <h1 class="text-3xl font-bold mb-6 text-white animate-[popIn_0.6s_ease-out]">📝 Register</h1>
+    <form action="{% url 'register' %}" method="POST" class="space-y-6">
+      {% csrf_token %}
+
+      <!-- Email Input -->
+      <div class="text-gray-300 animate-[fadeUp_0.6s_ease-out]">
+        <label for="email" class="block mb-2">Email</label>
+        <input
+          type="email"
+          name="email"
+          placeholder="📧 Email Address"
+          class="w-full px-4 py-2 border border-gray-300 rounded-md text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300 transform hover:scale-105 hover:shadow-inner hover:shadow-blue-500/30"
+          autocomplete="off"
+          required
+        />
+      </div>
+
+      <!-- Username Input -->
+      <div class="text-gray-300 animate-[fadeUp_0.7s_ease-out]">
+        <label for="username" class="block mb-2">Username</label>
+        <input
+          type="text"
+          id="username"
+          name="username"
+          placeholder="👤 Auction Alias"
+          class="w-full px-4 py-2 border border-gray-300 rounded-md text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300 transform hover:scale-105 hover:shadow-inner hover:shadow-blue-500/30"
+          autocomplete="off"
+          required
+        />
+      </div>
+<!-- 🔐 Password Input -->
+<div class="text-gray-300 animate-[fadeUp_0.8s_ease-out] relative mb-6">
+  <label for="password" class="block mb-2">Password</label>
+  <input
+    type="password"
+    id="password"
+    name="password"
+    placeholder="🔐 Create Password"
+    class="w-full px-4 py-2 border border-gray-300 rounded-md text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300 transform hover:scale-105 hover:shadow-inner hover:shadow-blue-500/30 pr-10"
+    autocomplete="off"
+    required
+  />
+  <!-- 👁️ Toggle Visibility -->
+  <button type="button" onclick="togglePassword('password')" 
+          class="absolute top-9 right-3 text-gray-500 hover:text-blue-600 transition">
+    👁️
+  </button>
+
+  <!-- ✅ Live Feedback with Color -->
+  <ul class="mt-2 text-sm space-y-1">
+    <li id="length-check" class="text-red-500">❌ At least 8 characters</li>
+    <li id="uppercase-check" class="text-red-500">❌ One uppercase letter</li>
+    <li id="symbol-check" class="text-red-500">❌ One special character (@, #, $, etc.)</li>
+  </ul>
+</div>
+
+
+      <!-- Confirm Password Input -->
+      <div class="text-gray-300 animate-[fadeUp_0.9s_ease-out]">
+        <label for="confirmation" class="block mb-2">Confirm Password</label>
+        <input
+          type="password"
+          name="confirmation"
+          placeholder="🔁 Confirm Password"
+          class="w-full px-4 py-2 border border-gray-300 rounded-md text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300 transform hover:scale-105 hover:shadow-inner hover:shadow-blue-500/30"
+          autocomplete="off"
+          required
+        />
+      </div>
+
+      <!-- Sign-up Button -->
+      <div class="animate-[fadeUp_1s_ease-out]">
+        <button
+          type="submit"
+          class="w-full bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 text-white font-semibold py-2 px-6 rounded-md shadow-lg transition duration-300 transform hover:scale-105 hover:-translate-y-1 hover:rotate-[1deg] hover:shadow-[0_10px_20px_rgba(59,130,246,0.6)]"
+        >
+          🚀 Sign Up
+        </button>
+      </div>
+    </form>
+
+    <!-- Login Link -->
+    <div class="mt-6 text-gray-400 text-center animate-[fadeUp_1.1s_ease-out]">
+      <p>Already have an account? 
+        <a href="{% url 'login' %}" class="text-blue-500 hover:underline transition duration-300 transform hover:scale-105 hover:text-blue-400">
+          🔐 Login Here
+        </a>
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- 🎬 Custom Animations -->
+<style>
+@keyframes fadeSlide {
+  0% { opacity: 0; transform: translateY(-20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeUp {
+  0% { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@keyframes popIn {
+  0% { transform: scale(0.95); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+</style>
+
+<script>
+  function togglePassword(id) {
+    const input = document.getElementById(id);
+    input.type = input.type === "password" ? "text" : "password";
+  }
+
+  const passwordInput = document.getElementById("password");
+
+  passwordInput.addEventListener("input", function () {
+    const val = this.value;
+
+    // Length check
+    const lengthCheck = document.getElementById("length-check");
+    if (val.length >= 8) {
+      lengthCheck.textContent = "✅ At least 8 characters";
+      lengthCheck.classList.replace("text-red-500", "text-green-500");
+    } else {
+      lengthCheck.textContent = "❌ At least 8 characters";
+      lengthCheck.classList.replace("text-green-500", "text-red-500");
+    }
+
+    // Uppercase check
+    const uppercaseCheck = document.getElementById("uppercase-check");
+    if (/[A-Z]/.test(val)) {
+      uppercaseCheck.textContent = "✅ One uppercase letter";
+      uppercaseCheck.classList.replace("text-red-500", "text-green-500");
+    } else {
+      uppercaseCheck.textContent = "❌ One uppercase letter";
+      uppercaseCheck.classList.replace("text-green-500", "text-red-500");
+    }
+
+    // Symbol check
+    const symbolCheck = document.getElementById("symbol-check");
+    if (/[@#$%^&*!]/.test(val)) {
+      symbolCheck.textContent = "✅ One special character (@, #, $, etc.)";
+      symbolCheck.classList.replace("text-red-500", "text-green-500");
+    } else {
+      symbolCheck.textContent = "❌ One special character (@, #, $, etc.)";
+      symbolCheck.classList.replace("text-green-500", "text-red-500");
+    }
+  });
+</script>
+
+
+{% endblock %}

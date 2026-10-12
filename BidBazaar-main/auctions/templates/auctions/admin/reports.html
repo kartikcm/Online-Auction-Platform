@@ -1,0 +1,20 @@
+{% extends 'admin_layout.html' %}
+
+{% block body %}
+<div class="p-6">
+    <h2 class="text-2xl font-bold mb-4">{{ title }}</h2>
+
+    {% if listings %}
+        <ul class="space-y-2">
+            {% for listing in listings %}
+                <li class="bg-white p-4 rounded shadow">
+                    <p><strong>{{ listing.title }}</strong></p>
+                    <p>Status: {{ listing.status }}</p>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No listings found for this category.</p>
+    {% endif %}
+</div>
+{% endblock %}

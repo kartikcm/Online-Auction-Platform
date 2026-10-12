@@ -1,0 +1,124 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>{% block title %}BidBazaar{% endblock %}</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- External Libraries -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Local Assets -->
+    <script src="{% static 'assets/js/utils.js' %}"></script>
+    <link href="{% static 'assets/css/all.css' %}" rel="stylesheet">
+    <link rel="icon" href="{% static 'assets/images/favicon.ico' %}">
+</head>
+<body class="bg-gray-50 dark:bg-gray-900">
+
+<!-- Navigation Bar -->
+<nav class="fixed top-0 left-0 right-0 z-50 bg-white/70 backdrop-blur-md shadow-lg transition-all duration-300">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between items-center h-16">
+
+      <!-- Logo -->
+      <div class="flex-shrink-0 flex items-center gap-2">
+        <a href="{% url 'index' %}" class="flex items-center gap-2 hover:scale-105 transition-transform duration-300">
+          <img class="h-10 w-auto" src="{% static 'assets/images/logo.svg' %}" alt="BidBazaar Logo">
+          <span class="text-xl font-bold text-blue-600 tracking-wide">Online Auction Platform</span>
+        </a>
+      </div>
+
+      <!-- Desktop Menu -->
+      <div class="hidden lg:flex space-x-6 items-center">
+        <a href="{% url 'index' %}" class="text-gray-600 font-medium hover:text-blue-600 transition duration-300">Home</a>
+        <a href="{% url 'categories' %}" class="text-gray-600 font-medium hover:text-blue-600 transition duration-300">Categories</a>
+        <a href="{% url 'about' %}" class="text-gray-600 font-medium hover:text-blue-600 transition duration-300">About Us</a>
+        {% if user.is_authenticated %}
+          <a href="{% url 'create_listing' %}" class="text-gray-600 font-medium hover:text-blue-600 transition duration-300">Create Listings</a>
+          <a href="{% url 'your_listings' %}" class="text-gray-600 font-medium hover:text-blue-600 transition duration-300">Your Listings</a>
+          <a href="{% url 'won_listings' %}" class="text-gray-600 font-medium hover:text-blue-600 transition duration-300">Won Auctions</a>
+          <a href="{% url 'watch_list' %}" class="text-gray-600 font-medium hover:text-blue-600 transition duration-300">Watch List</a>
+        {% endif %}
+      </div>
+
+      <!-- User Section -->
+      <div class="hidden lg:flex items-center space-x-4">
+        {% if user.is_authenticated %}
+          <div class="flex items-center gap-3">
+            <img src="{% static 'assets/images/user-edit.svg' %}" alt="User" class="h-8 w-8 rounded-full border border-blue-500">
+            <div class="text-sm">
+              <p class="text-gray-700">Welcome,</p>
+              <p class="font-semibold text-blue-600">{{ user.username }}</p>
+            </div>
+            <a href="{% url 'view_profile' %}" class="text-gray-600 font-medium hover:text-blue-600 transition duration-300">Profile</a>
+            <a href="{% url 'logout' %}" class="text-red-500 font-medium hover:text-red-700 transition duration-300">Logout</a>
+          </div>
+        {% else %}
+          <a href="{% url 'register' %}" class="text-gray-600 font-medium hover:text-blue-600 transition duration-300">Register</a>
+          <a href="{% url 'login' %}" class="text-gray-600 font-medium hover:text-blue-600 transition duration-300">Login</a>
+        {% endif %}
+      </div>
+
+      <!-- Mobile Menu Button -->
+      <div class="lg:hidden flex items-center">
+        <button id="menu-toggle" class="text-gray-700 focus:outline-none">
+          <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile Menu -->
+  <div id="menu" class="lg:hidden hidden px-4 pt-2 pb-4 space-y-2 bg-white/90 backdrop-blur-md shadow-md">
+    <a href="{% url 'index' %}" class="block text-gray-600 font-medium hover:text-blue-600 transition duration-300">Home</a>
+    <a href="{% url 'categories' %}" class="block text-gray-600 font-medium hover:text-blue-600 transition duration-300">Categories</a>
+    {% if user.is_authenticated %}
+      <a href="{% url 'create_listing' %}" class="block text-gray-600 font-medium hover:text-blue-600 transition duration-300">Create Listings</a>
+      <a href="{% url 'your_listings' %}" class="block text-gray-600 font-medium hover:text-blue-600 transition duration-300">Your Listings</a>
+      <a href="{% url 'won_listings' %}" class="block text-gray-600 font-medium hover:text-blue-600 transition duration-300">Won Auctions</a>
+      <a href="{% url 'watch_list' %}" class="block text-gray-600 font-medium hover:text-blue-600 transition duration-300">Watch List</a>
+      <a href="{% url 'view_profile' %}" class="block text-gray-600 font-medium hover:text-blue-600 transition duration-300">Profile</a>
+      <a href="{% url 'logout' %}" class="block text-red-500 font-medium hover:text-red-700 transition duration-300">Logout</a>
+    {% else %}
+      <a href="{% url 'register' %}" class="block text-gray-600 font-medium hover:text-blue-600 transition duration-300">Register</a>
+      <a href="{% url 'login' %}" class="block text-gray-600 font-medium hover:text-blue-600 transition duration-300">Login</a>
+    {% endif %}
+  </div>
+</nav>
+
+<script>
+  document.getElementById('menu-toggle').addEventListener('click', function () {
+    document.getElementById('menu').classList.toggle('hidden');
+  });
+</script>
+
+{% block body %}
+{% endblock %}
+
+<!-- Footer -->
+<footer class="bg-gray-200 py-12 mt-20">
+  <div class="container mx-auto flex flex-col md:flex-row justify-between items-center">
+    <div class="flex items-center justify-center md:justify-start">
+      <a href="{% url 'index' %}">
+        <img src="{% static 'assets/images/logo.svg' %}" alt="BidBazaar Logo" class="h-16 mr-4">
+      </a>
+    </div>
+    <h1 class="text-gray-900 text-lg font-semibold">All Rights Reserved &copy; bidbazaar.com</h1>
+    <nav class="mt-4 md:mt-0">
+      <ul class="flex justify-center md:justify-end space-x-4">
+        <li><a href="{% url 'admin-dashboard' %}" class="text-gray-600 hover:text-blue-600 transition duration-300">Admin</a></li>
+        <li><a href="#" class="text-gray-600 hover:text-blue-600 transition duration-300">Terms of Service</a></li>
+        <li><a href="#" class="text-gray-600 hover:text-blue-600 transition duration-300">Privacy Policy</a></li>
+        <li><a href="#" class="text-gray-600 hover:text-blue-600 transition duration-300">Contact Us</a></li>
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>
